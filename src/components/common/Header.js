@@ -16,11 +16,12 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -33,46 +34,74 @@ const useStyles = makeStyles((theme) => ({
   fullList: {
     width: 'auto',
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 }));
 
 function Header() {
   const classes = useStyles();
 
   const [state, setState] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const toggleDrawer = () => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-
     setState(state === false ? true : false);
+  };
+  const handleClick = () => {
+    setOpen(!open);
   };
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" onClick={toggleDrawer()} className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Drawer anchor="left" open={state} onClose={toggleDrawer()}>
-            <div className={clsx(classes.list)} role="presentation" onClick={toggleDrawer()} onKeyDown={toggleDrawer()}>
-              <List>
-                <ListItem button>
-                  <ListItemIcon>
-                    <InboxIcon />
-                  </ListItemIcon>
-                  <ListItemText>test</ListItemText>
-                </ListItem>
-              </List>
-            </div>
-          </Drawer>
-          <Typography variant="h6" className={classes.title}>
-            News
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position="sticky">
+      <Toolbar>
+        <IconButton edge="start" onClick={toggleDrawer()} className={classes.menuButton} color="inherit" aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+        <Drawer anchor="left" open={state} onClose={toggleDrawer()}>
+          <div className={clsx(classes.list)} role="presentation">
+            <List>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText>test</ListItemText>
+              </ListItem>
+              <ListItem button onClick={handleClick}>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Inbox" />
+                {open ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText primary="Starred" />
+                  </ListItem>
+                </List>
+              </Collapse>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText>test</ListItemText>
+              </ListItem>
+            </List>
+          </div>
+        </Drawer>
+        <Typography variant="h6" className={classes.title}>
+          News
+        </Typography>
+        <Button color="inherit">Login</Button>
+      </Toolbar>
+    </AppBar>
   );
 }
 
