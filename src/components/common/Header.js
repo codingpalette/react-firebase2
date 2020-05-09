@@ -44,9 +44,13 @@ function Header() {
 
   const [state, setState] = useState(false);
   const [open, setOpen] = useState(false);
+  const [headerTitle] = useState('타이틀');
 
   const toggleDrawer = () => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+    if (
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
       return;
     }
     setState(state === false ? true : false);
@@ -58,7 +62,13 @@ function Header() {
   return (
     <AppBar position="sticky">
       <Toolbar>
-        <IconButton edge="start" onClick={toggleDrawer()} className={classes.menuButton} color="inherit" aria-label="menu">
+        <IconButton
+          edge="start"
+          onClick={toggleDrawer()}
+          className={classes.menuButton}
+          color="inherit"
+          aria-label="menu"
+        >
           <MenuIcon />
         </IconButton>
         <Drawer anchor="left" open={state} onClose={toggleDrawer()}>
@@ -97,7 +107,7 @@ function Header() {
           </div>
         </Drawer>
         <Typography variant="h6" className={classes.title}>
-          News
+          {headerTitle}
         </Typography>
         <Button color="inherit">Login</Button>
       </Toolbar>
