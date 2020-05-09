@@ -21,6 +21,8 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
 
+import * as firebase from 'firebase/app';
+
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
@@ -45,6 +47,8 @@ function Header() {
   const [state, setState] = useState(false);
   const [open, setOpen] = useState(false);
   const [headerTitle] = useState('타이틀');
+
+  console.log(firebase);
 
   const toggleDrawer = () => (event) => {
     if (
