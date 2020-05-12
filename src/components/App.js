@@ -21,7 +21,6 @@ function App() {
         'value',
         (sn) => {
           const v = sn.val();
-          console.log(v);
           if (!v) {
             firebase.database().ref().child('site').set(site);
           }

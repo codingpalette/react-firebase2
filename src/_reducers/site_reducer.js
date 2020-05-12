@@ -1,11 +1,11 @@
-import * as firebase from 'firebase/app';
-
 // **** 초기상태 정의
 const initialState = {
   site: {
     memu: [],
-    title: '타이틀 입니다',
+    title: '',
   },
+  error: false,
+  errorMessage: '',
 };
 
 // **** 액션 타입 정의
@@ -15,6 +15,9 @@ export const SITE_LOAD_SUCCESS = 'SITE_LOAD_SUCCESS';
 export const SITE_LOAD_FAILURE = 'SITE_LOAD_FAILURE';
 
 export const SITE_UPDATE_SUCCESS = 'SITE_UPDATE_SUCCESS';
+
+export const ERROR_OPEN_SUCCESS = 'ERROR_OPEN_SUCCESS';
+export const ERROR_CLOSE_SUCCESS = 'ERROR_CLOSE_SUCCESS';
 
 function sites(state = initialState, action) {
   switch (action.type) {
@@ -31,10 +34,21 @@ function sites(state = initialState, action) {
         ...state,
       };
     case SITE_UPDATE_SUCCESS:
-      console.log(action);
       return {
         ...state,
         site: action.data,
+      };
+    case ERROR_OPEN_SUCCESS:
+      return {
+        ...state,
+        error: true,
+        errorMessage: action.data,
+      };
+    case ERROR_CLOSE_SUCCESS:
+      return {
+        ...state,
+        error: false,
+        errorMessage: '',
       };
     default:
       return state;

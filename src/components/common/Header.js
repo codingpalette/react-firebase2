@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Error from './Error';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -31,6 +32,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { ERROR_OPEN_SUCCESS } from '../../_reducers/site_reducer';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -55,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Header() {
   const { site } = useSelector((state) => state.site);
+  const dispatch = useDispatch();
 
   const classes = useStyles();
 
@@ -64,10 +67,7 @@ function Header() {
   const [dialopen, setDialopen] = useState(false);
 
   const toggleDrawer = () => (event) => {
-    if (
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
     setState(state === false ? true : false);
@@ -92,7 +92,10 @@ function Header() {
     try {
       await firebase.database().ref().child('site').update({ title: title });
     } catch (e) {
-      alert(e);
+      dispatch({
+        type: ERROR_OPEN_SUCCESS,
+        data: '권환이 없습니다.',
+      });
     } finally {
       setDialopen(false);
     }
@@ -101,13 +104,7 @@ function Header() {
   return (
     <AppBar position="sticky">
       <Toolbar>
-        <IconButton
-          edge="start"
-          onClick={toggleDrawer()}
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="menu"
-        >
+        <IconButton edge="start" onClick={toggleDrawer()} className={classes.menuButton} color="inherit" aria-label="menu">
           <MenuIcon />
         </IconButton>
         <Drawer anchor="left" open={state} onClose={toggleDrawer()}>
@@ -146,32 +143,14 @@ function Header() {
           </div>
         </Drawer>
         <Typography variant="h6">{site.title}</Typography>
-        <IconButton
-          aria-label="수정"
-          color="inherit"
-          onClick={onClickDialogOpne}
-        >
+        <IconButton aria-label="수정" color="inherit" onClick={onClickDialogOpne}>
           <CreateIcon />
         </IconButton>
-        <Dialog
-          aria-labelledby="customized-dialog-title"
-          open={dialopen}
-          onClose={onClickDialogClose}
-        >
+        <Dialog aria-labelledby="customized-dialog-title" open={dialopen} onClose={onClickDialogClose}>
           <DialogTitle id="form-dialog-title">타이틀 수정</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              수정할 타이틀을 입력해 주세요.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Title"
-              type="text"
-              fullWidth
-              value={title}
-              onChange={onChangeTitle}
-            />
+            <DialogContentText>수정할 타이틀을 입력해 주세요.</DialogContentText>
+            <TextField autoFocus margin="dense" label="Title" type="text" fullWidth value={title} onChange={onChangeTitle} />
           </DialogContent>
           <DialogActions>
             <Button onClick={onClickDialogClose} color="primary">
@@ -185,6 +164,7 @@ function Header() {
         <Button color="inherit" className={classes.ml}>
           Login
         </Button>
+        <Error />
       </Toolbar>
     </AppBar>
   );
